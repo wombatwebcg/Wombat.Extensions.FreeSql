@@ -1,0 +1,179 @@
+﻿using System;
+using FreeSql;
+using FreeSql.Aop;
+using Microsoft.Extensions.DependencyInjection;
+using System.Collections.Generic;
+using System.Text;
+using System.Linq;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Wombat.Extensions.FreeSql.Config;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using System.Reflection;
+
+
+namespace Wombat.Extensions.FreeSql
+{
+    public static class ServiceCollectionExtensions
+    {
+        /// <summary>
+        /// 直接从配置文件读取配置
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="service"></param>
+        public static void AddFreeSql<T>(this IServiceCollection service)
+        {
+            //var thisFontColor = (int)Console.ForegroundColor;
+            //var newFontColor = (ConsoleColor)((thisFontColor + 1) > 15 ? 0 : (thisFontColor + 1));
+            service.TryAddScoped<IFreeSqlUnitOfWorkManager, FreeSqlUnitOfWorkManager>();
+
+            service.AddSingleton(f =>
+            {
+                var log = f.GetRequiredService<ILogger<IFreeSql>>();
+                var current = f.GetRequiredService<IOptions<FreeSqlCollectionConfig>>().Value.FreeSqlCollections.FirstOrDefault(x => x.Key == typeof(T).Name);
+                var builder = new FreeSqlBuilder()
+                    .UseConnectionString(current.DataType, current.MasterConnetion)
+                    .UseAutoSyncStructure(current.IsSyncStructure)
+                    .UseMonitorCommand(executing =>
+                    {
+                        executing.CommandTimeout = current.CommandTimeout;
+
+                        if (current.DebugShowSql)
+                        {
+                            //Console.ForegroundColor = newFontColor;
+                            //Console.WriteLine("\n=================================================================================\n");
+                            //Console.WriteLine(executed.CommandText + "\n");
+
+                            string parametersValue = "";
+                            if (current.DebugShowSqlPparameters)
+                            {
+                                for (int i = 0; i < executing.Parameters.Count; i++)
+                                {
+                                    parametersValue += $"{executing.Parameters[i].ParameterName}:{executing.Parameters[i].Value}" + ";\n";
+                                }
+                            }
+                            if (!string.IsNullOrWhiteSpace(parametersValue))
+                            {
+                                //Console.WriteLine(parametersValue);
+                                log.LogDebug
+                             (
+                                 "\n=================================================================================\n\n"
+                                                             + executing.CommandText + "\n\n"
+                                                             + "\n" + parametersValue +
+                                 "\n=================================================================================\n\n"
+                             );
+                            }
+                            else
+                            {
+                                log.LogDebug
+                                (
+                                    "\n=================================================================================\n\n"
+                                                                    + executing.CommandText +
+                                    "\n\n=================================================================================\n"
+                                );
+                            }
+                            //Console.WriteLine("=================================================================================\n");
+                            //Console.ResetColor();
+                        }
+                    });
+                if (current.SlaveConnections.Count > 0)//判断是否存在从库
+                {
+                    builder.UseSlave(current.SlaveConnections.Select(x => x.ConnectionString).ToArray());
+                }
+                var res = builder.Build<T>();
+
+                #region //使用FreeSql AOP做对应的业务拓展，有需要自行实现
+
+                //res.GlobalFilter.Apply<IDeleted>(SysConsts.IsDeletedDataFilter, x => !x.IsDeleted);
+                //res.GlobalFilter.Apply<IEnabled>(SysConsts.IsEnabledDataFilter, x => x.Enabled == true);
+                //res.Aop.ConfigEntity += new EventHandler<ConfigEntityEventArgs>((_, e) =>
+                //{
+                //    var attrs = e.EntityType.GetCustomAttributes(typeof(IndexAttribute), false);
+                //    foreach (var attr in attrs)
+                //    {
+                //        var temp = attr as IndexAttribute;
+                //        e.ModifyIndexResult.Add(new FreeSql.DataAnnotations.IndexAttribute(temp.Name, temp.Fields, temp.IsUnique));
+                //    }
+                //});
+
+                #endregion //使用FreeSql AOP做对应的业务拓展，有需要自行实现
+
+                return res;
+            });
+            service.AddScoped<IUnitOfWork<T>, UnitOfWork<T>>();
+        }
+
+
+        public static void AddFreeSql(this IServiceCollection service, string dbName)
+        {
+
+            var thisFontColor = (int)Console.ForegroundColor;
+            var newFontColor = (ConsoleColor)((thisFontColor + 1) > 15 ? 0 : (thisFontColor + 1));
+            service.TryAddScoped<IFreeSqlUnitOfWorkManager, FreeSqlUnitOfWorkManager>();
+            if (service == null) throw new ArgumentNullException(nameof(service));
+
+
+            //注入FreeSql
+            service.AddScoped(f =>
+            {
+                var log = f.GetRequiredService<ILogger<IFreeSql>>();
+                var current = f.GetRequiredService<IOptions<FreeSqlCollectionConfig>>().Value.FreeSqlCollections.FirstOrDefault(x => x.Key == dbName);
+
+                var freeBuilder = new FreeSqlBuilder()
+                    .UseAutoSyncStructure(current.IsSyncStructure)
+                    .UseConnectionString(current.DataType, current.MasterConnetion)
+                    .UseLazyLoading(current.IsLazyLoading)
+                    .UseMonitorCommand(aop =>
+                    {
+                        if (current.DebugShowSql)
+                        {
+
+                            //Console.ForegroundColor = newFontColor;
+                            //Console.WriteLine("=================================================================================\n");
+                            //Console.WriteLine(aop.CommandText + "\n");
+
+                            string parametersValue = "";
+                            for (int i = 0; i < aop.Parameters.Count; i++)
+                            {
+                                parametersValue += $"{aop.Parameters[i].ParameterName}:{aop.Parameters[i].Value}" + ";\n";
+                            }
+                            if (!string.IsNullOrWhiteSpace(parametersValue))
+                            {
+                                //Console.WriteLine(parametersValue);
+
+                                log.LogInformation
+                                (
+                                    "\n=================================================================================\n\n"
+                                                                + aop.CommandText + "\n\n"
+                                                                + parametersValue +
+                                    "\n=================================================================================\n\n"
+                                );
+                            }
+
+                            log.LogInformation
+                            (
+                                "\n=================================================================================\n\n"
+                                                                                + aop.CommandText +
+                                "\n\n=================================================================================\n"
+                            );
+
+                            //Console.WriteLine("=================================================================================\n");
+                            //Console.ForegroundColor = (ConsoleColor)thisFontColor;
+                        }
+                    });
+                if (current.SlaveConnections?.Count > 0)//判断是否存在从库
+                {
+                    freeBuilder.UseSlave(current.SlaveConnections.Select(x => x.ConnectionString).ToArray());
+                }
+                var freesql = freeBuilder.Build();
+                //我这里禁用了导航属性联级插入的功能
+                freesql.SetDbContextOptions(opt => opt.EnableCascadeSave = false);
+                return freesql;
+            });
+
+            //注入Uow
+            service.AddScoped(f => f.GetRequiredService<IFreeSql>().CreateUnitOfWork());
+        }
+
+    }
+}

@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35919.96
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wombat.Extensions.FreeSql", "Wombat.Extensions.FreeSql\Wombat.Extensions.FreeSql.csproj", "{59B59BC7-5DE0-48B3-9B37-9D60ADD01905}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wombat.Extensions.FreeSql.Demo", "Wombat.Extensions.FreeSql.Demo\Wombat.Extensions.FreeSql.Demo.csproj", "{2731CED5-1A02-4B8F-967A-359141666C44}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{59B59BC7-5DE0-48B3-9B37-9D60ADD01905}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59B59BC7-5DE0-48B3-9B37-9D60ADD01905}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59B59BC7-5DE0-48B3-9B37-9D60ADD01905}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59B59BC7-5DE0-48B3-9B37-9D60ADD01905}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2731CED5-1A02-4B8F-967A-359141666C44}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2731CED5-1A02-4B8F-967A-359141666C44}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2731CED5-1A02-4B8F-967A-359141666C44}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2731CED5-1A02-4B8F-967A-359141666C44}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {63686D04-C264-48F1-925A-68D4A6346908}
+	EndGlobalSection
+EndGlobal
