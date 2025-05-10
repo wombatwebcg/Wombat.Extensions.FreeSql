@@ -27,6 +27,9 @@
 		<None Update="Database\DB1.db3">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
+		<None Update="Database\DB3.db3">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
 		<None Update="Database\DB2.db3">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
