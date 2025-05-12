@@ -18,6 +18,7 @@ namespace Wombat.Extensions.FreeSql
             var fsql = service.GetRequiredService<IFreeSql>();
             _baseRep = fsql.GetRepository<T>();
             _baseRep.UnitOfWork = service.GetService<IRepositoryUnitOfWork>();
+            UnitOfWork = _baseRep.UnitOfWork;
         }
 
         public IUpdate<T> UpdateDiy => _baseRep.UpdateDiy;

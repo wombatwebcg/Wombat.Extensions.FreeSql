@@ -61,6 +61,9 @@ namespace Wombat.Extensions.FreeSql.Config
 
 
         public bool IsLazyLoading { get; set; } = false;
+
+        public bool IsUseUnitOfWork { get; set; } = false;
+
     }
 
     /// <summary>

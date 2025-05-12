@@ -25,16 +25,37 @@ namespace Wombat.Extensions.FreeSql.Demo
             var db1 = app.Services.GetService<DB1Repository>();
             var db2 = app.Services.GetService<DB2Repository>();
             var db3 = app.Services.GetService<DB3Repository>();
+            var db4 = app.Services.GetService<DB4Repository>();
+
             //var config = builder.Configuration.GetSection("SqlConfig");
 
 
             var unitOfWork = app.Services.GetService<UnitOfWork>();
+            var test11 = db1.Select.First(p => p.Id == 103);
+
+            //using (var transaction = db1.UnitOfWork.GetOrBeginTransaction())
+            //{
+            //    db1.Insert(new Class1() { Id = 1100 });
+            //}
+            //var test12 = db2.Select.First(p => p.Id == 103);
+
+            //using (var transaction = db2.UnitOfWork.GetOrBeginTransaction())
+            //{
+            //    db2.Insert(new Class2() { Id = 103 });
+            //    transaction.Commit();
+
+            //}
+
+            var test5 = db3.Select.First(p => p.Id == 101);
+
+            var test6 = db4.Select.First(p => p.Id == 101);
+
+            db3.Insert(new Class3() { Id = 1012345 });
+            db3.UnitOfWork.Commit();
 
 
-            db1.Insert(new Class1() { Id = 103 });
-            db2.Insert(new Class2() { Id = 104 });
-            db3.Insert(new Class3() { Id = 105 });
-
+            //db4.Orm.Insert(new Class4() { Id = 108 });
+            //db4.UnitOfWork.Commit();
 
             var test1 = db1.Select.First(p => p.Id == 103);
 

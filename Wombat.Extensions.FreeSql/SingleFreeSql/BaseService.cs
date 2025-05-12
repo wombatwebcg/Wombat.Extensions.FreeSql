@@ -13,9 +13,9 @@ namespace Wombat.Extensions.FreeSql
 
         public IRepositoryUnitOfWork UnitOfWork { get; }
 
-        public BaseService(IServiceProvider service)//, ILogger logger)
+        public BaseService(IServiceProvider service)
         {
-            //Logger = logger;
+  
             UnitOfWork = service.GetRequiredService<IRepositoryUnitOfWork>();
         }
     }
