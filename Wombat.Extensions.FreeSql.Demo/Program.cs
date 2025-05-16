@@ -25,7 +25,7 @@ namespace Wombat.Extensions.FreeSql.Demo
             var db1 = app.Services.GetService<DB1Repository>();
             var db2 = app.Services.GetService<DB2Repository>();
             var db3 = app.Services.GetService<DB3Repository>();
-            var db4 = app.Services.GetService<DB4Repository>();
+            var db4 = app.Services.GetService<IDB4Repository>();
 
             //var config = builder.Configuration.GetSection("SqlConfig");
 
@@ -50,8 +50,9 @@ namespace Wombat.Extensions.FreeSql.Demo
 
             var test6 = db4.Select.First(p => p.Id == 101);
 
-            db3.Insert(new Class3() { Id = 1012345 });
-            db3.UnitOfWork.Commit();
+            //db3.Insert(new Class3() { Id = 10123457 });
+            //db3.UnitOfWork.Commit();
+            db4.Insert(new Class4() { Id = 10123457 });
 
 
             //db4.Orm.Insert(new Class4() { Id = 108 });

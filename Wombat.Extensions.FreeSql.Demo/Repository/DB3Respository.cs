@@ -4,9 +4,9 @@ using Wombat.Extensions.FreeSql;
 
 namespace Wombat.Extensions.FreeSql.Demo
 {
-    public interface IDB3Repository : IRepositoryKey
-    {
-    }
+    //public interface IDB3Repository : IRepositoryKey
+    //{
+    //}
 
     [AutoInject(ServiceLifetime = ServiceLifetime.Scoped)]
     public class DB3Repository : BaseRepository<Class3, DB3>
@@ -16,12 +16,13 @@ namespace Wombat.Extensions.FreeSql.Demo
         }
     }
 
-    public interface IDB4Repository : IRepositoryKey
+    public interface IDB4Repository: IRepositoryKey<Class4>
     {
+
     }
 
-    [AutoInject(ServiceLifetime = ServiceLifetime.Scoped)]
-    public class DB4Repository : BaseRepository<Class4, DB3>
+    [AutoInject(typeof(IDB4Repository), ServiceLifetime = ServiceLifetime.Scoped)]
+    public class DB4Repository : BaseRepository<Class4, DB3>, IDB4Repository
     {
         public DB4Repository(IServiceProvider service) : base(service)
         {

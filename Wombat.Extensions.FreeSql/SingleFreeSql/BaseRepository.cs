@@ -9,7 +9,7 @@ using System.Threading;
 
 namespace Wombat.Extensions.FreeSql
 {
-    public class BaseRepository<T, TKey> : IBaseRepository<T>, IRepositoryKey where T : class
+    public class BaseRepository<T, TKey> : IRepositoryKey<T> where T : class
     {
         private IBaseRepository<T> _baseRep;
 
