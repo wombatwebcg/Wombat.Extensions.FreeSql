@@ -9,5 +9,10 @@ namespace Wombat.Extensions.FreeSql.Demo
         [Column(IsPrimary = true)]
 
         public long Id { get; set; }
+
+
+        [JsonMap]
+
+        public Dictionary<long, string> Properties { get; set; }
     }
 }

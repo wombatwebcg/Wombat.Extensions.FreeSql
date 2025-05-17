@@ -50,9 +50,11 @@ namespace Wombat.Extensions.FreeSql.Demo
 
             var test6 = db4.Select.First(p => p.Id == 101);
 
-            //db3.Insert(new Class3() { Id = 10123457 });
+            var c3 = new Class3() { Id = 123, Properties = new Dictionary<long, string>() };
+            c3.Properties.Add(1, "2");
+            db3.Insert(c3);
             //db3.UnitOfWork.Commit();
-            db4.Insert(new Class4() { Id = 10123457 });
+            db4.Insert(new Class4() { Id = 1014457 });
 
 
             //db4.Orm.Insert(new Class4() { Id = 108 });

@@ -85,7 +85,7 @@ namespace Wombat.Extensions.FreeSql
                     builder.UseSlave(config.SlaveConnections.Select(x => x.ConnectionString).ToArray());
                 }
                 var res = builder.Build<T>();
-
+                res.UseJsonMap();
                 #region //使用FreeSql AOP做对应的业务拓展，有需要自行实现
 
                 //res.GlobalFilter.Apply<IDeleted>(SysConsts.IsDeletedDataFilter, x => !x.IsDeleted);
@@ -135,7 +135,7 @@ namespace Wombat.Extensions.FreeSql
                 var config = options.Value.FreeSqlCollections.FirstOrDefault(x => x.Key == typeof(T).Name);
                 if (config == null)
                     throw new InvalidOperationException($"未找到 {typeof(T).Name} 的 SqlConfig 配置");
-                var freeSql =serviceProvider.GetRequiredService<IOptions<FreeSqlCollectionConfig>>().Value;
+                var freeSqlConfig =serviceProvider.GetRequiredService<IOptions<FreeSqlCollectionConfig>>().Value;
                 var freeBuilder = new FreeSqlBuilder()
                     .UseAutoSyncStructure(config.IsSyncStructure)
                     .UseConnectionString(config.DataType, config.MasterConnetion)
@@ -183,8 +183,9 @@ namespace Wombat.Extensions.FreeSql
                 {
                     freeBuilder.UseSlave(config.SlaveConnections.Select(x => x.ConnectionString).ToArray());
                 }
-                var freesql = freeBuilder.Build();
-                return freesql;
+                var freeSql = freeBuilder.Build();
+                freeSql.UseJsonMap();
+                return freeSql;
 
 
             });
