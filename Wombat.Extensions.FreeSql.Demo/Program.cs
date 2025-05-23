@@ -3,6 +3,7 @@ using Microsoft.Extensions.Hosting;
 using Wombat.Extensions.FreeSql.Config;
 using Wombat.Extensions.FreeSql;
 using FreeSql;
+using System.Data.Common;
 
 namespace Wombat.Extensions.FreeSql.Demo
 {
@@ -30,7 +31,7 @@ namespace Wombat.Extensions.FreeSql.Demo
             //var config = builder.Configuration.GetSection("SqlConfig");
 
 
-            var unitOfWork = app.Services.GetService<UnitOfWork>();
+            var unitOfWork = app.Services.GetService<IUnitOfWork>();
             var test11 = db1.Select.First(p => p.Id == 103);
 
             //using (var transaction = db1.UnitOfWork.GetOrBeginTransaction())
@@ -46,15 +47,28 @@ namespace Wombat.Extensions.FreeSql.Demo
 
             //}
 
-            var test5 = db3.Select.First(p => p.Id == 101);
+            //db4.Insert(new Class4() { Id = 101445889 });
 
-            var test6 = db4.Select.First(p => p.Id == 101);
 
-            var c3 = new Class3() { Id = 123, Properties = new Dictionary<long, string>() };
-            c3.Properties.Add(1, "2");
-            db3.Insert(c3);
-            //db3.UnitOfWork.Commit();
-            db4.Insert(new Class4() { Id = 1014457 });
+            using (var dbTransaction = app.Services.GetService<IFreeSql>().CreateUnitOfWork())
+            {
+                var c3 = new Class3() { Id = 123456, Properties = new Dictionary<long, string>() };
+                c3.Properties.Add(1, "2");
+                dbTransaction.GetRepository<Class3>().Insert(c3);
+                dbTransaction.GetRepository<Class4>().Insert(new Class4() { Id = 1014457109 });
+                dbTransaction.Commit();
+            }
+
+
+            //    var test5 = db3.Select.First(p => p.Id == 101);
+
+            //var test6 = db4.Select.First(p => p.Id == 101);
+
+            //var c3 = new Class3() { Id = 123, Properties = new Dictionary<long, string>() };
+            //c3.Properties.Add(1, "2");
+            //db3.Insert(c3);
+            ////db3.UnitOfWork.Commit();
+            //db4.Insert(new Class4() { Id = 1014457 });
 
 
             //db4.Orm.Insert(new Class4() { Id = 108 });

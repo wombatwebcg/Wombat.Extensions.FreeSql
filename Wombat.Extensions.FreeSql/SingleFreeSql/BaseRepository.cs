@@ -6,19 +6,19 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using System.Threading;
+using System.Data.Common;
 
 namespace Wombat.Extensions.FreeSql
 {
     public class BaseRepository<T, TKey> : IRepositoryKey<T> where T : class
     {
         private IBaseRepository<T> _baseRep;
-
+       private IServiceProvider _service;
         public BaseRepository(IServiceProvider service)
         {
             var fsql = service.GetRequiredService<IFreeSql>();
             _baseRep = fsql.GetRepository<T>();
-            _baseRep.UnitOfWork = service.GetService<IRepositoryUnitOfWork>();
-            UnitOfWork = _baseRep.UnitOfWork;
+            UnitOfWork = fsql?.CreateUnitOfWork();
         }
 
         public IUpdate<T> UpdateDiy => _baseRep.UpdateDiy;
@@ -28,8 +28,13 @@ namespace Wombat.Extensions.FreeSql
         public ISelect<T> Select => _baseRep.Select;
 
         public Type EntityType => _baseRep.EntityType;
-
-        public IUnitOfWork UnitOfWork { get; set; }
+        public IUnitOfWork UnitOfWork 
+        { 
+            get; 
+            
+            set;
+        
+        }
 
         public IFreeSql Orm => _baseRep.Orm;
 

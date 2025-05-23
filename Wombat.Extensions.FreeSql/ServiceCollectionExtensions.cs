@@ -191,17 +191,17 @@ namespace Wombat.Extensions.FreeSql
             });
 
 
-            service.TryAddScoped(sp =>
-            {
-                var options = sp.GetRequiredService<IOptions<FreeSqlCollectionConfig>>();
-                var config = options.Value.FreeSqlCollections.FirstOrDefault(x => x.Key == typeof(T).Name);
-                if (config.IsUseUnitOfWork)
-                {
-                    return sp.GetRequiredService<IFreeSql>().CreateUnitOfWork();
-                }
-                return null;
+            //service.TryAddScoped(sp =>
+            //{
+            //    var options = sp.GetRequiredService<IOptions<FreeSqlCollectionConfig>>();
+            //    var config = options.Value.FreeSqlCollections.FirstOrDefault(x => x.Key == typeof(T).Name);
+            //    if (config.IsUseUnitOfWork)
+            //    {
+            //        return sp.GetRequiredService<IFreeSql>().CreateUnitOfWork();
+            //    }
+            //    return null;
 
-            });
+            //});
         }
 
 
