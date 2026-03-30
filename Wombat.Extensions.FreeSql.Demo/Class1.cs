@@ -1,4 +1,4 @@
-﻿using FreeSql.DataAnnotations;
+using FreeSql.DataAnnotations;
 using Newtonsoft.Json;
 
 namespace Wombat.Extensions.FreeSql.Demo

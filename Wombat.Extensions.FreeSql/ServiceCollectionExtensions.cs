@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using FreeSql;
 using FreeSql.Aop;
 using Microsoft.Extensions.DependencyInjection;
